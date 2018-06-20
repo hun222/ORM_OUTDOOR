@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +17,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.Holder>{
     Context context;
     DBConnect con;
     List<Memo> datas = null;
+    ModifyInterface modifyInterface;
+
     public CustomAdapter(Context context, DBConnect con){
         this.context = context;
         this.con = con;
@@ -53,11 +56,25 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.Holder>{
         public Holder(View itemView) {
             super(itemView);
             text_no = itemView.findViewById(R.id.text_no);
-            text_content = itemView.findViewById(R.id.text_content);
             text_name = itemView.findViewById(R.id.text_name);
-            btn_x = itemView.findViewById(R.id.btn_x);
+
+            // 아이템 수정
+            text_content = itemView.findViewById(R.id.text_content);
+            text_content.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String title = "tmp";
+                    String content = text_content.getText().toString();
+                    String username = text_name.getText().toString();
+                    long timestamp = 0;
+                    Memo memo = new Memo(title, content, username, timestamp);
+                    memo.id = Holder.this.id;
+                    modifyInterface.change(memo);
+                }
+            });
 
             // 리스트 아이템 삭제
+            btn_x = itemView.findViewById(R.id.btn_x);
             btn_x.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -93,5 +110,8 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.Holder>{
         public void setName(String content){
             text_name.setText(content);
         }
+    }
+    public interface ModifyInterface{
+        public void change(Memo memo);
     }
 }

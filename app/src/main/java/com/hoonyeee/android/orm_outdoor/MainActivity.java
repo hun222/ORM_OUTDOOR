@@ -15,7 +15,7 @@ import com.j256.ormlite.dao.Dao;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements CustomAdapter.ModifyInterface{
     EditText editTitle;
     EditText editContent;
     TextView textWriter, textDate, list;
@@ -73,6 +73,15 @@ public class MainActivity extends AppCompatActivity{
             datas = con.selectAll();
             adapter.setData(datas);
             adapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            Toast.makeText(getBaseContext(), "DB error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void change(Memo memo) {
+        try {
+            con.update(memo);
         } catch (Exception e) {
             Toast.makeText(getBaseContext(), "DB error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
